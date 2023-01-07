@@ -8,7 +8,7 @@ The input data for MOLP problem should be inputed as an numpy arrays for scipy.o
 
 For more info: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html
 
-
+123
 
 ## Refrences: 
 
