@@ -1,11 +1,9 @@
 from MembershipFunctions import Tprod
 
-
-
 # Function, that checks inout data.
 
 # Paramters: 
-#  - List : [ numer of Ojb. functions, number of variables, number of constraints]
+#  - List : [ number of Ojb. functions, number of variables, number of constraints]
 #  - List of Objective functions coefficients
 #  - Matrix A: 
 #  - Vector B 
@@ -15,4 +13,4 @@ def SolveMolp( Method = None ,size = None, Obj_fn = None,
     
     if Method == "Tprod":
         Result = Tprod(size,  Obj_fn, A_ub,  b_ub, Weights)
-        print(Result)
+        return(Result)
