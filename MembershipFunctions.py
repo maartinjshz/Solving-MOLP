@@ -1,6 +1,6 @@
-from sympy import Min
 from scipy.optimize import linprog, minimize
 import numpy as np
+from warnings import warn
 
 
 
@@ -36,21 +36,21 @@ def MembershipFunction(x,i):
 def ProdNorm(x):
     val = 1
     for i in range( 0,Size[0]):
-        val = val* MembershipFunction(x,i)
+        val = val* MembershipFunction(x,i)* Weights[i]/Weights[-1]
     
     return  -val
 
 
 def Tprod(size = None, obj_fn = None, 
-    a_ub = None, b_ub = None, Weights = None):
+    a_ub = None, b_ub = None, weights = None):
     
 # Variables are required to be global, because when using
 # NelderMead method from scipy.minimze, 
 # Only the vector x can be passed. Because other variables are needed
 # They are passed as global variables
 
-    global Size, A_ub, B_ub, Obj_fn
-    Size, A_ub,B_ub,Obj_fn = size,a_ub,b_ub, obj_fn
+    global Size, A_ub, B_ub, Obj_fn, Weights
+    Size, A_ub,B_ub,Obj_fn,Weights = size,a_ub,b_ub, obj_fn, weights
 
     # Izveido mainīgo nosacījumus, lai varētu lietot
     # Iebūvēto simpleksa metodi
@@ -75,7 +75,7 @@ def Tprod(size = None, obj_fn = None,
         Obj_fn *= -1
     Obj_fn *= -1
     if Exsists_exstremum == False:
-        print("Error when trying to find a local extremum.")
+        warn( "Error while finding local extremum for objective functions" , RuntimeWarning)
     else:
         # Lists are made Global, because their values will be needed for 
         # Constructing Membership function but while using scipy.optimize, 
