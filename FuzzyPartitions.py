@@ -3,8 +3,6 @@ import numpy as np
 from warnings import warn
 
 
-
-
 # Checks if the point is inside the set D. 
 def Constraints(x):
     if np.amin(x) < 0:
@@ -16,33 +14,36 @@ def Constraints(x):
             return False
     return True
 
+def Equivalence_Lukasiewicz(x,y,it):
+    z_x = np.dot(x, Obj_fn[it])
+    z_y = np.dot(y, Obj_fn[it])
 
-# Finds the value for membership function
-def MembershipFunction(x,i):
-
-
-# Returns 0, if the x is outside of the set D.
-    if Constraints(x) == False:
-        return 0
-
-    Obj_fun_val = np.dot(Obj_fn[i], x  )
-    if Obj_fun_val<= z_min_value[i]:
-        return 0
-    elif z_min_value[i] < Obj_fun_val and Obj_fun_val < z_max_value[i] :
-        return (Obj_fun_val - z_min_value[i])/(z_max_value[i] - z_min_value[i])
-    else:
+    if z_x <= z_y:
         return 1
+    else:
+        return 1 - np.abs(z_x-z_y)/( z_max_value[it] -z_min_value[it])
 
-# Find Product T-norm of membership function at point x
-def ProdNorm(x):
-    val = 1
-    for i in range( 0,Size[0]):
-        val = val* MembershipFunction(x,i)* Weights[i]/Weights[-1]
-    
-    return  -val
+# Function that Aggregates Partitions
+def Agregation_Lukasiewicz(x,y):
+
+# Return 0, if the point is outside of the set D.
+    if Constraints(y) == False:
+        return 0
+
+    Val = 0
+    for it in range(0, Size[0]):
+        Val += Equivalence_Lukasiewicz(x,y,it) * Weights[it]/Weights[-1]
+    return Val
+
+# This function does the Minimisation part in the Max - Min problem.
+def function_to_max(y):
+    MinVal = 2
+    for it in range(0, Size[0]):
+        MinVal = min(  Agregation_Lukasiewicz(z_max[it],y),MinVal )
+    return - MinVal
 
 
-def Tprod(size = None, obj_fn = None, 
+def PartLk(size = None, obj_fn = None, 
     a_ub = None, b_ub = None, weights = None):
     
 # Variables are required to be global, because when using
@@ -62,8 +63,8 @@ def Tprod(size = None, obj_fn = None,
     # Constructing Membership function but while using scipy.optimize, 
     # They cant be passed. 
 
-    global z_max_value,z_min_value
-    z_max_value,z_min_value = [],[]
+    global z_max_value,z_min_value, z_max
+    z_max_value,z_min_value, z_max= [],[], np.zeros((size[0],size[1]))
 
     # Finds local extremums for each function. (Minimum and maximum)
     for i in range(0,size[0]):
@@ -71,6 +72,7 @@ def Tprod(size = None, obj_fn = None,
         if rez_max.success == False:
             Exsists_exstremum = False
         else:
+            z_max[i]= rez_max.x
             z_max_value.append( np.dot(  -Obj_fn[i], rez_max.x ))
         Obj_fn *= -1
         # Atrod optimālo atrisinājumi otrai funkcijai ar simpleksa metodi
@@ -78,24 +80,19 @@ def Tprod(size = None, obj_fn = None,
         if rez_min.success == False:
             Exsists_exstremum = False
         else:
-            z_min_value.append( np.dot(  Obj_fn[i], rez_min.x))
+            z_min_value.append( np.dot(  Obj_fn[i], rez_min.x ))
         Obj_fn *= -1
     Obj_fn *= -1
     if Exsists_exstremum == False:
         warn( "Error while finding local extremum for objective functions" , RuntimeWarning)
     else:
-        # Lists are made Global, because their values will be needed for 
-        # Constructing Membership function but while using scipy.optimize, 
-        # They cant be passed. 
-
 
         # Finds the optimal solution using Nelder Mead method from
         # Scipy module.
-        x_start =  ( rez_max.x + rez_min.x) * 1/2
+        x_start =  ( z_max[0] + z_max[1]) * 1/2
      
         # 
         # 
-        Result = (minimize( ProdNorm, x_start,method='Nelder-Mead',
-        options={'xatol': 1e-12, 'disp': True,'maxiter': 10000} ))
-
+        Result = (minimize( function_to_max, x_start,method='Nelder-Mead',
+        options={'xatol': 1e-12, 'disp': False,'maxiter': 10000} ))
         return Result.x
