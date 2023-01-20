@@ -1,6 +1,7 @@
-from scipy.optimize import linprog, minimize
+from scipy.optimize import linprog, minimize,brute
 import numpy as np
 from warnings import warn
+from pypoman import compute_polytope_vertices
 
 
 # Checks if the point is inside the set D. 
@@ -43,8 +44,8 @@ def Agregation_Product(x,y):
 
 def function_to_max_Product(y):
     MinVal = 2
-    for it in range(0, Size[0]):
-        MinVal = min(  Agregation_Product(z_max[it],y),MinVal )
+    for it in D_Vertices:
+        MinVal = min(  Agregation_Product(it,y),MinVal )
     return - MinVal
 
 
@@ -78,8 +79,8 @@ def Agregation_Lukasiewicz(x,y):
 # This function does the Minimisation part in the Max - Min problem.
 def function_to_max_Lukasiewicz(y):
     MinVal = 2
-    for it in range(0, Size[0]):
-        MinVal = min(  Agregation_Lukasiewicz(z_max[it],y),MinVal )
+    for it in D_Vertices:
+        MinVal = min(  Agregation_Lukasiewicz(it,y),MinVal )
     return - MinVal
 
 
@@ -103,8 +104,8 @@ def Orderings(Method, size = None, obj_fn = None,
     # Constructing Membership function but while using scipy.optimize, 
     # They cant be passed. 
 
-    global z_max_value,z_min_value, z_max
-    z_max_value,z_min_value, z_max= [],[], np.zeros((size[0],size[1]))
+    global z_max_value,z_min_value
+    z_max_value,z_min_value= [],[]
 
     # Finds local extremums for each function. (Minimum and maximum)
     for i in range(0,size[0]):
@@ -112,7 +113,6 @@ def Orderings(Method, size = None, obj_fn = None,
         if rez_max.success == False:
             Exsists_exstremum = False
         else:
-            z_max[i]= rez_max.x
             z_max_value.append( np.dot(  -Obj_fn[i], rez_max.x ))
         Obj_fn *= -1
         # Atrod optimālo atrisinājumi otrai funkcijai ar simpleksa metodi
@@ -127,18 +127,25 @@ def Orderings(Method, size = None, obj_fn = None,
         warn( "Error while finding local extremum for objective functions" , RuntimeWarning)
     else:
 
-        # Finds the optimal solution using Nelder Mead method from
-        # Scipy module.
-        x_start =  ( z_max[0] + z_max[1]) * 1/2
+# Finds all the Vertices for set D. required for the Min part. 
+        global D_Vertices
+        D_Vertices = compute_polytope_vertices(np.vstack((A_ub, - np.eye(Size[1])))
+        ,np.append(B_ub, np.zeros((Size[1],1))))
      
+# Finds the upper bound for each variable. It is required for the Brute function. 
+        Bounds = np.zeros((Size[1],2))
+        for i in D_Vertices:
+            for j in range(0,Size[1]):
+                if i[j] > Bounds[j][1]:
+                    Bounds[j][1] = i[j]
+
         # 
         # 
+
         if Method == "OrderLuk":
-            Result = (minimize( function_to_max_Lukasiewicz, x_start,method='Nelder-Mead',
-            options={'xatol': 1e-12, 'disp': False,'maxiter': 10000} ))
+            Result = brute(  function_to_max_Lukasiewicz, Bounds, Ns = np.max(Bounds)* 100)
 
         if Method == "OrderProd":
-            Result = (minimize( function_to_max_Product, x_start,method='Nelder-Mead',
-            options={'xatol': 1e-12, 'disp': False,'maxiter': 10000} ))
+            Result = brute(  function_to_max_Product, Bounds, Ns = np.max(Bounds)* 100)
 
-        return Result.x
+        return Result

@@ -35,3 +35,12 @@ def SolveMolp( Method = "Tprod" , Obj_fn = None,
     if Method in ("OrderLuk", "OrderProd"):
         Result = Orderings(Method,size,  Obj_fn, A_ub,  b_ub, Weights)
         return(Result)
+
+
+A = np.array([[-1,3], [1,3],[4,3],[3,1]])
+b = np.array([ 21,27,45,30])
+
+fun = np.array([[-1,2], [2,1]])
+print(SolveMolp("OrderLuk", fun,A,b))
+
+
