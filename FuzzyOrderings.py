@@ -14,6 +14,46 @@ def Constraints(x):
             return False
     return True
 
+###
+# Functions to calculate the value of Product Fuzzy Orderings
+###
+
+
+# Calculates value of the i-th product-ordering
+def Equivalence_Product(x,y,it):
+    z_x = np.dot(x, Obj_fn[it])
+    z_y = np.dot(y, Obj_fn[it])
+
+    if z_x <= z_y:
+        return 1
+    else:
+        return np.exp( - np.abs(z_x-z_y)/( z_max_value[it] -z_min_value[it]))
+
+# Function that Aggregates Orderings
+def Agregation_Product(x,y):
+
+# Return 0, if the point is outside of the set D.
+    if Constraints(y) == False:
+        return 0
+
+    Val = 0
+    for it in range(0, Size[0]):
+        Val *= Equivalence_Product(x,y,it)**(Weights[it]/Weights[-1])
+    return Val
+
+def function_to_max_Product(y):
+    MinVal = 2
+    for it in range(0, Size[0]):
+        MinVal = min(  Agregation_Product(z_max[it],y),MinVal )
+    return - MinVal
+
+
+###
+# Functions to calculate the value of Lukasiewicz Fuzzy Orderings
+###
+
+
+# Calculates value of the i-th Lukasiewicz-ordering
 def Equivalence_Lukasiewicz(x,y,it):
     z_x = np.dot(x, Obj_fn[it])
     z_y = np.dot(y, Obj_fn[it])
@@ -36,14 +76,14 @@ def Agregation_Lukasiewicz(x,y):
     return Val
 
 # This function does the Minimisation part in the Max - Min problem.
-def function_to_max(y):
+def function_to_max_Lukasiewicz(y):
     MinVal = 2
     for it in range(0, Size[0]):
         MinVal = min(  Agregation_Lukasiewicz(z_max[it],y),MinVal )
     return - MinVal
 
 
-def Orderings(size = None, obj_fn = None, 
+def Orderings(Method, size = None, obj_fn = None, 
     a_ub = None, b_ub = None, weights = None):
     
 # Variables are required to be global, because when using
@@ -93,6 +133,12 @@ def Orderings(size = None, obj_fn = None,
      
         # 
         # 
-        Result = (minimize( function_to_max, x_start,method='Nelder-Mead',
-        options={'xatol': 1e-12, 'disp': False,'maxiter': 10000} ))
+        if Method == "OrderLuk":
+            Result = (minimize( function_to_max_Lukasiewicz, x_start,method='Nelder-Mead',
+            options={'xatol': 1e-12, 'disp': False,'maxiter': 10000} ))
+
+        if Method == "OrderProd":
+            Result = (minimize( function_to_max_Product, x_start,method='Nelder-Mead',
+            options={'xatol': 1e-12, 'disp': False,'maxiter': 10000} ))
+
         return Result.x

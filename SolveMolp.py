@@ -29,9 +29,9 @@ def SolveMolp( Method = "Tprod" , Obj_fn = None,
     Weights = np.append( Weights, np.sum(Weights))
 
     if Method in ("Tprod","Tmin"):
-        Result = Tprod(size,  Obj_fn, A_ub,  b_ub, Weights)
+        Result = T_norm(Method,size,  Obj_fn, A_ub,  b_ub, Weights)
         return(Result)
 
-    if Method == "PartLk":
-        Result = PartLk(size,  Obj_fn, A_ub,  b_ub, Weights)
+    if Method in ("OrderLuk", "OrderProd"):
+        Result = Orderings(Method,size,  Obj_fn, A_ub,  b_ub, Weights)
         return(Result)
