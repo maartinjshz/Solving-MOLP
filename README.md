@@ -15,3 +15,7 @@ For more info: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimi
 [1] H.-J. Zimmermann. Fuzzy programming and linear programming with several
 objective functions. Fuzzy Sets and Systems, 1(1):45–55, 1978.
 http://dx.doi.org/10.1016/0165-0114(78)90031-3.
+
+
+
+![Tests](https://github.com/maartinjshz/Solving-MOLP/actions/workflows/tests.yml/badge.svg)
