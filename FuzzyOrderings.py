@@ -23,7 +23,7 @@ def Equivalence_Lukasiewicz(x,y,it):
     else:
         return 1 - np.abs(z_x-z_y)/( z_max_value[it] -z_min_value[it])
 
-# Function that Aggregates Partitions
+# Function that Aggregates Orderings
 def Agregation_Lukasiewicz(x,y):
 
 # Return 0, if the point is outside of the set D.
@@ -43,7 +43,7 @@ def function_to_max(y):
     return - MinVal
 
 
-def PartLk(size = None, obj_fn = None, 
+def Orderings(size = None, obj_fn = None, 
     a_ub = None, b_ub = None, weights = None):
     
 # Variables are required to be global, because when using

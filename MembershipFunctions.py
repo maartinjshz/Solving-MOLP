@@ -33,6 +33,8 @@ def MembershipFunction(x,i):
     else:
         return 1
 
+# Functions to optimize: 
+
 # Find Product T-norm of membership function at point x
 def ProdNorm(x):
     val = 1
@@ -41,8 +43,13 @@ def ProdNorm(x):
     
     return  -val
 
+def MinNorm(x):
+    val = 1
+    for i in range(0, Size[0]):
+        val = min(val,MembershipFunction(x,i))
+    return - val
 
-def Tprod(size = None, obj_fn = None, 
+def T_norm(Method,size = None, obj_fn = None, 
     a_ub = None, b_ub = None, weights = None):
     
 # Variables are required to be global, because when using
@@ -95,7 +102,13 @@ def Tprod(size = None, obj_fn = None,
      
         # 
         # 
-        Result = (minimize( ProdNorm, x_start,method='Nelder-Mead',
-        options={'xatol': 1e-12, 'disp': True,'maxiter': 10000} ))
+
+        if Method == "Tprod":
+            Result = (minimize( ProdNorm, x_start,method='Nelder-Mead',
+            options={'xatol': 1e-12, 'disp': True,'maxiter': 10000} ))
+            
+        if Method == "Tmin":
+            Result = (minimize( MinNorm, x_start,method='Nelder-Mead',
+            options={'xatol': 1e-12, 'disp': True,'maxiter': 10000} ))
 
         return Result.x

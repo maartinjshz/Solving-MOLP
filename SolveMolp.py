@@ -2,8 +2,8 @@ from warnings import warn
 import numpy as np
 
 
-from MembershipFunctions import Tprod
-from FuzzyPartitions import PartLk
+from MembershipFunctions import T_norm
+from FuzzyOrderings import Orderings
 # Function, that checks inout data.
 
 # Paramters: 
@@ -28,7 +28,7 @@ def SolveMolp( Method = "Tprod" , Obj_fn = None,
     
     Weights = np.append( Weights, np.sum(Weights))
 
-    if Method == "Tprod":
+    if Method in ("Tprod","Tmin"):
         Result = Tprod(size,  Obj_fn, A_ub,  b_ub, Weights)
         return(Result)
 
