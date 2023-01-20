@@ -2,8 +2,8 @@ from warnings import warn
 import numpy as np
 
 
-from MembershipFunctions import T_norm
-from FuzzyOrderings import Orderings
+from src.SolveMolp.MembershipFunctions import T_norm
+from src.SolveMolp.FuzzyOrderings import Orderings
 # Function, that checks inout data.
 
 # Paramters: 
@@ -37,10 +37,5 @@ def SolveMolp( Method = "Tprod" , Obj_fn = None,
         return(Result)
 
 
-A = np.array([[-1,3], [1,3],[4,3],[3,1]])
-b = np.array([ 21,27,45,30])
-
-fun = np.array([[-1,2], [2,1]])
-print(SolveMolp("OrderLuk", fun,A,b))
 
 
