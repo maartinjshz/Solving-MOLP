@@ -1,4 +1,4 @@
-from src.SolveMolp.main_fun import SolveMolp
+from src.SolveMolp.Optimeze import SolveMolp
 import numpy as np
 
 
