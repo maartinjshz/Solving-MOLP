@@ -1,13 +1,18 @@
 # Solving MOLP
- Algorithms for solving MOLP problems 
+ Algorithms for solving Multi Objective Linear programming (MOLP) problems 
 
 
-### To call the function
+### About
 
-The input data for MOLP problem should be inputed as an numpy arrays for scipy.optimize.linprog to work. 
+This project provides multiple methods for solving MOLP problems using fuzzy approach. 
+The MOLP problems this code can solve are in form: 
 
-For more info: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html
-
+```math
+ Max \ Cx \\
+ s.t. \\
+ Ax \leq b
+ x \geq 0 
+```
 
 
 ## Refrences: 
