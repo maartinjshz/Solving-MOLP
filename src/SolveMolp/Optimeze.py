@@ -23,7 +23,7 @@ def SolveMolp( Method = "Tprod" , Obj_fn = None,
     if size[2] != b_ub.shape[0]:
         warn("Dimensions are not compatible: A_ub and b_ub", RuntimeError)
 
-    if size[1] != Obj_fn.shape(1):
+    if size[1] != Obj_fn.shape[1]:
         warn("Dimensions are not compatible: A_ub and Obj_fn", RuntimeError)
     
     

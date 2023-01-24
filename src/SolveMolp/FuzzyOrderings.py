@@ -143,9 +143,9 @@ def Orderings(Method, size = None, obj_fn = None,
         # 
 
         if Method == "OrderLuk":
-            Result = brute(  function_to_max_Lukasiewicz, Bounds, Ns = np.max(Bounds)* 10)
+            Result = brute(  function_to_max_Lukasiewicz, Bounds, Ns = np.max(Bounds)* 100)
 
         if Method == "OrderProd":
-            Result = brute(  function_to_max_Product, Bounds, Ns = np.max(Bounds)* 10)
+            Result = brute(  function_to_max_Product, Bounds, Ns = np.max(Bounds)* 100)
 
         return Result
