@@ -10,6 +10,10 @@ $$Max \ \ \ Cx$$
 $$s.t. \ Ax \leq b$$
 $$x \geq 0$$
 
+The problems are solves using: 
+
+* Agregating Fuzzy Orderings
+* Agregating Membership functions 
 
 ## Refrences: 
 
