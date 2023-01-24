@@ -6,9 +6,8 @@
 
 This project provides multiple methods for solving MOLP problems using fuzzy approach. 
 The MOLP problems this code can solve are in form: 
-$$ Max Cx$$
-$$s.t.$$
-$$Ax \leq b$$
+$$Max Cx$$
+$$s.t. Ax \leq b$$
 $$x \geq 0$$
 
 
