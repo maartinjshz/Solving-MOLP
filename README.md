@@ -23,7 +23,7 @@ The code uses packages:
 * SciPy
 * Pypoman 
 
-And then clone the project. You only need src\SolveMolp folder. Simply call the Optimize.py function with all the necessary input data:
+Once they are installed, the project can be cloned. You only need src\SolveMolp folder. Simply call the Optimize.py function with all the necessary input data:
 
 * Method 
 * NumPy array for objective function coefficients.
