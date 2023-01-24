@@ -19,6 +19,13 @@ def SolveMolp( Method = "Tprod" , Obj_fn = None,
         warn("Missing one or many input parameters: Obj_fn, A_ub, b_ub " , RuntimeWarning  )
 
     size = [ Obj_fn.shape[0], A_ub.shape[1], A_ub.shape[0] ]
+
+    if size[2] != b_ub.shape[0]:
+        warn("Dimensions are not compatible: A_ub and b_ub", RuntimeError)
+
+    if size[1] != Obj_fn.shape(1):
+        warn("Dimensions are not compatible: A_ub and Obj_fn", RuntimeError)
+    
     
     if Weights is None:
         Weights = np.ones(( size[0] , 1))
