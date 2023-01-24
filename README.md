@@ -8,9 +8,9 @@ This project provides multiple methods for solving MOLP problems using fuzzy app
 The MOLP problems this code can solve are in form: 
 
 $$ Max \ Cx $$
-s.t. 
-$$ Ax \leq b $$
-$$ x \geq 0 $$
+  s.t. 
+$ Ax \leq b $
+$ x \geq 0 $
 
 
 ## Refrences: 
